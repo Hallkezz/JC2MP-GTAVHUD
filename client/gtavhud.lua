@@ -13,14 +13,34 @@ function GTAVHUD:__init()
 
     self.zHealth = Color( 156, 28, 27, 200 )
     self.fHealth = Color( 77, 143, 77, 200 )
+    self.aWasted = 0
+
+    Chat:SetPosition( Vector2( 30, 320 ) ) 
 
     Events:Subscribe( "Render", self, self.Render )
+    Events:Subscribe( "ResolutionChange", self, self.ResolutionChange )
+    Events:Subscribe( "LocalPlayerDeath", self, self.LocalPlayerDeath )
     Events:Subscribe( "LocalPlayerMoneyChange", self, self.LocalPlayerMoneyChange )
 end
 
 function GTAVHUD:Render()
     if not LocalPlayer:GetValue( "CustomHUD" ) then return end
-    if LocalPlayer:GetHealth() <= 0 then return end
+
+    if self.wastedTimer then
+        self.aWasted = math.clamp( self.wastedTimer:GetSeconds() * 255, 0, 255 )
+        if self.wastedTimer:GetSeconds() >= 1 then
+            self.wastedTimer = nil
+        end
+    end
+
+    if LocalPlayer:GetHealth() <= 0 then
+        local text_size = 80
+
+        Render:SetFont( AssetLocation.SystemFont, "Impact" )
+        Render:FillArea( Vector2( 0, Render.Size.y / 2  - 150 / 2 ), Vector2( Render.Size.x, 150 ), Color( 0, 0, 0, 100 ) )
+        Render:DrawText( Vector2( Render.Size.x / 2 - Render:GetTextWidth( "WASTED", text_size ) / 2, Render.Size.y / 2 - Render:GetTextHeight( "WASTED", text_size - 10 ) / 2 ), "WASTED", Color( 255, self.aWasted, self.aWasted, 150 ), text_size )
+        return
+    end
 
     Game:FireEvent( "gui.hud.hide" )
     Game:FireEvent( "gui.minimap.hide" )
@@ -54,8 +74,6 @@ function GTAVHUD:Render()
 			GTAVHUD:ScaleValue( LocalPlayer:GetPosition().z, -16384, 16384, 0, 1 )
 		)
     end
-
-    Chat:SetPosition( Vector2( 30, 320 ) ) 
 
     local col = Color.Black
     if LocalPlayer:GetHealth() < 0.25 then
@@ -151,6 +169,16 @@ function GTAVHUD:Render()
             self:DrawTextOutline( pos_ammo - Vector2( Render:GetTextSize( text_reserve ).x, 0 ) - Vector2( space, 0 ), text_reserve, Color( 0, 0, 0, 100 ), txtsize, scale )
             Render:DrawText( pos_ammo - Vector2( Render:GetTextSize( text_reserve ).x, 0 ) - Vector2( space, 0 ), text_reserve, Color.White, txtsize )
         end
+    end
+end
+
+function GTAVHUD:ResolutionChange()
+    Chat:SetPosition( Vector2( 30, 320 ) ) 
+end
+
+function GTAVHUD:LocalPlayerDeath()
+    if not self.wastedTimer then
+        self.wastedTimer = Timer()
     end
 end
 
