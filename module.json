@@ -1,12 +1,8 @@
 {
   "info": {
-    "author": "Hallkezz/Neon",
+    "author": "Hallkezz, Neon",
     "author_url": "https://www.jc-mp.com/forums/index.php?action=profile;u=217969",
     "description": "HUD from GTA V for JC2:MP",
     "name": "GTAVHUD"
-  },
-  "resources": {
-    "Arrow": "https://i.imgur.com/x6CU1zF.png",
-    "Map": "https://i.imgur.com/DUKZhFb.jpg"
   }
 }

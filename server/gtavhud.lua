@@ -1,7 +1,7 @@
 ----------------------
---By Hallkezz / Neon--
+--By Hallkezz, Neon--
 ----------------------
---Thanks for help JC2:MP devs community
+--Thanks JC2:MP devs community for help
 
 -----------------------------------------------------------------------------------
 --Script
@@ -23,13 +23,9 @@ end
 function GTAVHUD:ModuleLoad( args )
 	for p in Server:GetPlayers() do
 		if GTAVHUD_CONFIGURATION.ENABLED then
-			if not p:GetValue( "CustomHUD" ) then
-				p:SetNetworkValue( "CustomHUD", true )
-			end
+			if not p:GetValue( "CustomHUD" ) then p:SetNetworkValue( "CustomHUD", true ) end
 		else
-			if p:GetValue( "CustomHUD" ) then
-				p:SetNetworkValue( "CustomHUD", nil )
-			end
+			if p:GetValue( "CustomHUD" ) then p:SetNetworkValue( "CustomHUD", nil ) end
 		end
 	end
 end
